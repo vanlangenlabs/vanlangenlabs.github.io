@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch docs site (py)",
+      "type": "msedge",
+      "request": "launch",
+      "url": "http://localhost:8000",
+      "webRoot": "${workspaceFolder}/docs",
+      "preLaunchTask": "Serve docs (py)"
+    },
+    {
+      "name": "Launch docs site (python)",
+      "type": "msedge",
+      "request": "launch",
+      "url": "http://localhost:8000",
+      "webRoot": "${workspaceFolder}/docs",
+      "preLaunchTask": "Serve docs (python)"
+    }
+  ]
+}
