@@ -11,7 +11,7 @@
   */
 
   const CONFIG = {
-    logoUrl: "vanlangenlabs_big.png",
+    logoUrl: "vanlangenlabs.png",
 
     // Logo size in pixels. Final size is:
     // min(screen width * logoScreenScale, screen height * logoScreenScale, logoMaxSizePx)
@@ -71,11 +71,32 @@
     antialias: true,
     premultipliedAlpha: false
   });
+  const isFileProtocol = window.location.protocol === "file:";
 
-  if (!gl) {
+  let fallbackEnabled = false;
+
+  function enableFallback(reason) {
+    if (fallbackEnabled) {
+      return;
+    }
+
+    fallbackEnabled = true;
     document.body.classList.add("no-webgl");
-    throw new Error("WebGL2 not supported");
+
+    if (reason) {
+      console.error(reason);
+    }
   }
+
+  if (isFileProtocol) {
+    enableFallback("WebGL is disabled on file:// to avoid browser texture security restrictions.");
+  }
+
+  if (!gl && !fallbackEnabled) {
+    enableFallback("WebGL2 not supported");
+  }
+
+  if (gl && !fallbackEnabled) {
 
   const vertexShaderSource = `#version 300 es
     precision highp float;
@@ -384,27 +405,38 @@
   let imageLoaded = false;
 
   const image = new Image();
-  image.src = CONFIG.logoUrl;
+  const logoUrl = new URL(CONFIG.logoUrl, window.location.href);
+  const isCrossOrigin = logoUrl.origin !== window.location.origin;
+
+  // Only use CORS mode for truly cross-origin assets.
+  if (isCrossOrigin) {
+    image.crossOrigin = "anonymous";
+  }
+
+  image.src = logoUrl.href;
 
   image.onload = () => {
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    try {
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      image
-    );
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        image
+      );
 
-    imageLoaded = true;
+      imageLoaded = true;
+    } catch (error) {
+      enableFallback(`Texture upload failed for ${CONFIG.logoUrl}: ${error}`);
+    }
   };
 
   image.onerror = () => {
-    console.error(`Could not load ${CONFIG.logoUrl}`);
-    document.body.classList.add("no-webgl");
+    enableFallback(`Could not load ${CONFIG.logoUrl}`);
   };
 
   function resizeCanvas() {
@@ -436,6 +468,10 @@
   }
 
   function render(timeMs) {
+    if (fallbackEnabled) {
+      return;
+    }
+
     resizeCanvas();
 
     const time = timeMs * 0.001;
@@ -461,3 +497,4 @@
   }
 
   requestAnimationFrame(render);
+}

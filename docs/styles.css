@@ -53,7 +53,7 @@ canvas {
 .fallback-logo {
   position: fixed;
   left: 50%;
-  top: 42vh;
+  top: 50vh;
   transform: translate(-50%, -50%);
   width: min(72vw, 420px);
   height: auto;
