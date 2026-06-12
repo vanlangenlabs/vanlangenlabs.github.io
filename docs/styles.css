@@ -32,7 +32,7 @@ canvas {
 
 .slogan {
   margin: 0;
-  font-size: clamp(1.1rem, 2.8vw, 2rem);
+  font-size: clamp(1rem, 2.4vw, 1.75rem);
   font-weight: 300;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -48,6 +48,76 @@ canvas {
   font-weight: 300;
   letter-spacing: 0.04em;
   color: rgba(180, 215, 230, 0.65);
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  pointer-events: auto;
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+
+  min-height: 1.7rem;
+  padding: 0.32rem 0.58rem;
+  border: 1px solid rgba(120, 220, 255, 0.13);
+  border-radius: 999px;
+
+  color: rgba(190, 225, 240, 0.58);
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 300;
+  letter-spacing: 0.035em;
+
+  background: rgba(0, 16, 32, 0.18);
+  box-shadow:
+    0 0 8px rgba(0, 150, 255, 0.045),
+    inset 0 0 8px rgba(0, 180, 255, 0.035);
+  backdrop-filter: blur(4px);
+
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.contact-icon {
+  display: inline-block;
+  width: 0.72rem !important;
+  height: 0.72rem !important;
+  min-width: 0.72rem;
+  min-height: 0.72rem;
+  max-width: 0.72rem;
+  max-height: 0.72rem;
+  fill: currentColor;
+  flex: 0 0 0.72rem;
+  opacity: 0.72;
+}
+
+.contact-link:hover,
+.contact-link:focus-visible {
+  color: rgba(225, 245, 255, 0.86);
+  border-color: rgba(120, 220, 255, 0.30);
+  background: rgba(0, 28, 52, 0.28);
+  box-shadow:
+    0 0 11px rgba(0, 180, 255, 0.12),
+    inset 0 0 10px rgba(0, 180, 255, 0.055);
+  transform: translateY(-1px);
+}
+
+.contact-link:focus-visible {
+  outline: 1px solid rgba(120, 220, 255, 0.45);
+  outline-offset: 3px;
 }
 
 .fallback-logo {
@@ -69,9 +139,31 @@ body.no-webgl canvas {
   display: none;
 }
 
+@media (max-width: 520px) {
+  .contact-links {
+    gap: 0.45rem;
+    margin-top: 0.9rem;
+  }
+
+  .contact-link {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.68rem;
+  }
+
+  .contact-icon {
+    width: 0.68rem !important;
+    height: 0.68rem !important;
+    min-width: 0.68rem;
+    min-height: 0.68rem;
+    max-width: 0.68rem;
+    max-height: 0.68rem;
+    flex-basis: 0.68rem;
+  }
+}
+
 @media (max-height: 620px) {
   .page-content {
-    top: 72vh;
+    bottom: clamp(1rem, 5vh, 2rem);
   }
 
   .slogan {
@@ -80,5 +172,9 @@ body.no-webgl canvas {
 
   .subtitle {
     display: none;
+  }
+
+  .contact-links {
+    margin-top: 0.8rem;
   }
 }
